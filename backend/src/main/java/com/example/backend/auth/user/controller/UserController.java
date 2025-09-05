@@ -33,7 +33,7 @@ public class UserController {
     private String accessName;
 
     @PostMapping("/signup")
-    public ResponseEntity<BaseResponse<String>> signUp(
+    public ResponseEntity<BaseResponse<Boolean>> signUp(
             @RequestBody SignupDto signupDto
     ) {
 
@@ -41,7 +41,7 @@ public class UserController {
         userService.signUp(signupDto);
 
         return ResponseEntity.ok()
-                .body(BaseResponse.success("signup success"));
+                .body(BaseResponse.success(true));
     }
 
     @PostMapping("/login")
@@ -65,7 +65,7 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<BaseResponse<String>> logout(
+    public ResponseEntity<BaseResponse<Boolean>> logout(
             @AuthenticationPrincipal User user
     ) {
         // 쿠키 삭제
@@ -74,11 +74,11 @@ public class UserController {
         // 쿠키 설정
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, accessCookie.toString())
-                .body(BaseResponse.success("logout success"));
+                .body(BaseResponse.success(true));
     }
 
     @DeleteMapping
-    public ResponseEntity<BaseResponse<String>> delete(
+    public ResponseEntity<BaseResponse<Boolean>> delete(
             @AuthenticationPrincipal User user
     ) {
         // 유저 정보 변경
@@ -90,7 +90,16 @@ public class UserController {
         // 쿠키 설정
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, accessCookie.toString())
-                .body(BaseResponse.success("logout success"));
+                .body(BaseResponse.success(true));
+    }
+
+    @GetMapping("/check-email")
+    public ResponseEntity<BaseResponse<Boolean>> checkEmail(
+            @RequestParam String email
+    ) {
+        // 이메일 중복 확인
+        return ResponseEntity.ok()
+                .body(BaseResponse.success(userService.existsByEmail(email)));
     }
 
 }

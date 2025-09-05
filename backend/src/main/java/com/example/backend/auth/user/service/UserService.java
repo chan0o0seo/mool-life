@@ -31,7 +31,7 @@ public class UserService {
     public void signUp(SignupDto signupDto) {
 
         // email 중복 체크
-        if (userRepository.existsByEmail(signupDto.getEmail())) {
+        if (existsByEmail(signupDto.getEmail())) {
             throw new CustomException(ErrorCode.USER_EMAIL_DUPLICATED);
         }
         PasswordEncoder passwordEncoder = passwordConfig.passwordEncoder();
@@ -110,4 +110,16 @@ public class UserService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.LOGIN_FAILED));
     }
+
+    /**
+     * 이메일 중복 확인
+     *
+     * @param email 중복을 확인할 이메일
+     * @return true or false
+     */
+    public Boolean existsByEmail(String email) {
+        return userRepository.existsByEmail(email);
+    }
+
+
 }
