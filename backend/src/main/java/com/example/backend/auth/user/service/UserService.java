@@ -22,6 +22,11 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordConfig passwordConfig;
 
+    /**
+     * 회원가입
+     *
+     * @param signupDto 회원가입에 필수 정보가 담긴 dto
+     */
     @Transactional
     public void signUp(SignupDto signupDto) {
 
@@ -48,6 +53,12 @@ public class UserService {
         userRepository.save(newUser);
     }
 
+    /**
+     * 마지막 로그인 시간 저장하고 유저 정보 dto 반환
+     *
+     * @param email 로그인한 유저의 이메일
+     * @return 유저 정보가 담긴 dto
+     */
     @Transactional
     public UserInfoDto getUserInfo(String email) {
         // 유저 조회
@@ -70,6 +81,11 @@ public class UserService {
         return userInfo;
     }
 
+    /**
+     * 유저를 탈퇴(soft-delete) 처리한다.
+     *
+     * @param email 탈퇴할 유저의 이메일
+     */
     @Transactional
     public void softDeleteUser(String email) {
         // 유저 조회
@@ -84,6 +100,12 @@ public class UserService {
 
     // 유틸 함수
 
+    /**
+     * 이메일로 유저 조회
+     *
+     * @param email 조회할 유저의 이메일
+     * @return 유저 엔티티
+     */
     public Users findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new CustomException(ErrorCode.LOGIN_FAILED));
