@@ -13,9 +13,16 @@ import org.springframework.http.HttpStatus;
 public enum ErrorCode {
 
     LOGIN_FAILED(HttpStatus.BAD_REQUEST, "LOGIN_FAILED_400", "로그인 실패"),
+    UNAUTHORIZED_ACCESS(HttpStatus.UNAUTHORIZED, "UNAUTHORIZED_ACCESS_401", "권한이 없습니다."),
     UNKNOWN_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "UNKNOWN_ERROR_500", "처리되지 않은 서버 오류"),
 
     USER_EMAIL_DUPLICATED(HttpStatus.BAD_REQUEST, "USER_EMAIL_DUPLICATED_400", "이미 사용 중인 이메일입니다."),
+    USER_NOT_FOUND(HttpStatus.BAD_REQUEST, "USER_NOT_FOUND_400", "존재하지 않는 사용자입니다."),
+
+    ITEM_NOT_FOUND(HttpStatus.BAD_REQUEST, "ITEM_NOT_FOUND_400", "존재하지 않는 물품입니다."),
+    ITEM_CANNOT_UPDATE(HttpStatus.BAD_REQUEST, "ITEM_CANNOT_UPDATE_400", "수정은 경매 시작 전에만 가능합니다."),
+    ITEM_NOT_LIVE(HttpStatus.BAD_REQUEST, "ITEM_NOT_LIVE_400", "경매가 아직 시작하지않았습니다."),
+    BID_INCREMENT_TOO_LOW(HttpStatus.BAD_REQUEST, "BID_INCREMENT_TOO_LOW_400", "최소 입찰가보다 높은 금액을 제시해야 합니다."),
     ;
 
     private final HttpStatus httpStatus;

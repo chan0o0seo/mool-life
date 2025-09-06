@@ -1,4 +1,4 @@
-package com.example.backend.auction.model;
+package com.example.backend.auction.model.type;
 
 public enum Category {
     FISH,

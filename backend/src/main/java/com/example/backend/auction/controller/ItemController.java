@@ -1,36 +1,53 @@
 package com.example.backend.auction.controller;
 
+import com.example.backend.auction.model.dto.RegisterDto;
+import com.example.backend.auction.service.ItemService;
 import com.example.backend.exception.BaseResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/item")
 public class ItemController {
 
+    private final ItemService itemService;
+
     @PostMapping
     public ResponseEntity<BaseResponse<Boolean>> register(
-
+            @AuthenticationPrincipal User user,
+            @RequestBody RegisterDto registerDto
     ) {
-        // todo: 경매 등록
+        itemService.registerItem(registerDto, user.getUsername());
+
         return ResponseEntity.ok()
                 .body(BaseResponse.success(true));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<BaseResponse<Boolean>> update(
-
+            @PathVariable UUID id,
+            @AuthenticationPrincipal User user,
+            @RequestBody RegisterDto registerDto
     ) {
-        // TODO: 경매 수정 (경매 시작 전까지만 허용)
+        itemService.updateItem(id, registerDto, user.getUsername());
+
         return ResponseEntity.ok()
                 .body(BaseResponse.success(true));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<BaseResponse<Boolean>> delete(
-
+            @PathVariable UUID id,
+            @AuthenticationPrincipal User user
     ) {
-        // TODO: 경매 취소 (경매 시작 전까지만 허용)
+        itemService.deleteItem(id, user.getUsername());
+
         return ResponseEntity.ok()
                 .body(BaseResponse.success(true));
     }

@@ -1,40 +1,43 @@
 package com.example.backend.auction.controller;
 
+import com.example.backend.auction.model.dto.LightBidDto;
+import com.example.backend.auction.service.BidService;
 import com.example.backend.exception.BaseResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/item")
 public class BidController {
 
-    @PostMapping("/{id}/bids")
+    private final BidService bidService;
+
+    @PostMapping("/{itemId}/bids")
     public ResponseEntity<BaseResponse<Boolean>> bids(
-
+            @PathVariable UUID itemId,
+            @AuthenticationPrincipal User user,
+            @RequestParam BigDecimal bidPrice
     ) {
-        // todo: 입찰
+        bidService.placeBid(itemId, user.getUsername(), bidPrice);
+
         return ResponseEntity.ok()
                 .body(BaseResponse.success(true));
     }
 
-    @PostMapping("/{id}/buy-now")
-    public ResponseEntity<BaseResponse<Boolean>> buy(
 
+    @GetMapping("/{itemId}/bids")
+    public ResponseEntity<BaseResponse<List<LightBidDto>>> getBidHistories(
+            @PathVariable UUID itemId
     ) {
-        // todo: 즉시 구매 처리
         return ResponseEntity.ok()
-                .body(BaseResponse.success(true));
-    }
-
-    @GetMapping("/{id}/bids")
-    public ResponseEntity<BaseResponse<Boolean>> getHistory(
-
-    ) {
-        // todo: 해당 아이템의 입찰 히스토리 조회
-        return ResponseEntity.ok()
-                .body(BaseResponse.success(true));
+                .body(BaseResponse.success(bidService.getBidHistories(itemId)));
     }
 }

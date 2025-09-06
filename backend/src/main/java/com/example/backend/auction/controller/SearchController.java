@@ -1,31 +1,46 @@
 package com.example.backend.auction.controller;
 
+import com.example.backend.auction.model.dto.DetailItemDto;
+import com.example.backend.auction.model.dto.LightItemDto;
+import com.example.backend.auction.model.type.AuctionStatus;
+import com.example.backend.auction.service.SearchService;
 import com.example.backend.exception.BaseResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.UUID;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/item")
 public class SearchController {
 
-    @GetMapping
-    public ResponseEntity<BaseResponse<Boolean>> getAllItems(
+    private final SearchService searchService;
 
+    @GetMapping
+    public ResponseEntity<BaseResponse<List<LightItemDto>>> getAllItems(
+            @RequestParam(required = false) AuctionStatus status
     ) {
-        // todo: 전체 경매 리스트 (상태별 필터링: LIVE, UPCOMING, ENDED)
+        List<LightItemDto> items;
+
+        if (status != null) {
+            items = searchService.getItemsByStatus(status);
+        } else {
+            items = searchService.getAllItems();
+        }
         return ResponseEntity.ok()
-                .body(BaseResponse.success(true));
+                .body(BaseResponse.success(items));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<BaseResponse<Boolean>> getDetailItem(
-
+    @GetMapping("/{itemId}")
+    public ResponseEntity<BaseResponse<DetailItemDto>> getDetailItem(
+            @PathVariable UUID itemId
     ) {
-        // todo: 특정 경매 상세
         return ResponseEntity.ok()
-                .body(BaseResponse.success(true));
+                .body(BaseResponse.success(
+                        searchService.getDetailById(itemId)));
     }
 
     @GetMapping("/my")
