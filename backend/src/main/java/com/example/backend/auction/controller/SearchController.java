@@ -7,6 +7,8 @@ import com.example.backend.auction.service.SearchService;
 import com.example.backend.exception.BaseResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,20 +46,22 @@ public class SearchController {
     }
 
     @GetMapping("/my")
-    public ResponseEntity<BaseResponse<Boolean>> getMyItems(
-
+    public ResponseEntity<BaseResponse<List<LightItemDto>>> getMyItems(
+            @AuthenticationPrincipal User user
     ) {
-        // todo: 판매자가 올린 경매 리스트
+        // 경매 리스트 반환(판매자)
         return ResponseEntity.ok()
-                .body(BaseResponse.success(true));
+                .body(BaseResponse.success(
+                        searchService.getItemsBySellerEmail(user.getUsername())));
     }
 
     @GetMapping("/participating")
-    public ResponseEntity<BaseResponse<Boolean>> getParticipatingItems(
-
+    public ResponseEntity<BaseResponse<List<LightItemDto>>> getParticipatingItems(
+            @AuthenticationPrincipal User user
     ) {
-        // todo: 참여중인 경매 리스트
+        // 경매 리스트 반환(참여자)
         return ResponseEntity.ok()
-                .body(BaseResponse.success(true));
+                .body(BaseResponse.success(
+                        searchService.getItemsByBidderEmail(user.getUsername())));
     }
 }

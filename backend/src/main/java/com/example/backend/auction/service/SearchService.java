@@ -4,6 +4,7 @@ import com.example.backend.auction.model.Item;
 import com.example.backend.auction.model.dto.DetailItemDto;
 import com.example.backend.auction.model.dto.LightItemDto;
 import com.example.backend.auction.model.type.AuctionStatus;
+import com.example.backend.auction.repository.BidRepository;
 import com.example.backend.auction.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class SearchService {
 
     private final ItemService itemService;
     private final ItemRepository itemRepository;
+    private final BidRepository bidRepository;
 
     /**
      * 경매 물품의 상세 정보 조회
@@ -30,6 +32,28 @@ public class SearchService {
         Item item = itemService.getItem(itemId);
 
         return Item.toDetailItemDto(item);
+    }
+
+    /**
+     * 유저가 참여중인 경매 리스트 반환
+     *
+     * @param email 조회할 유저의 이메일
+     * @return 유저가 참여한 경매의 정보를 담은 dto 리스트
+     */
+    public List<LightItemDto> getItemsByBidderEmail(String email) {
+        return bidRepository.findDistinctItemsByBidderEmail(email)
+                .stream().map(Item::toLightItemDto).toList();
+    }
+
+    /**
+     * 자신이 생성한 경매 리스트 반환
+     *
+     * @param email 조회할 유저의 이메일
+     * @return 유저가 생성한 경매의 정보를 담은 dto 리스트
+     */
+    public List<LightItemDto> getItemsBySellerEmail(String email) {
+        return itemRepository.findBySellerEmail(email)
+                .stream().map(Item::toLightItemDto).toList();
     }
 
     public List<LightItemDto> getItemsByStatus(AuctionStatus status) {

@@ -20,4 +20,10 @@ public interface ItemRepository extends JpaRepository<Item, UUID> {
     Optional<Item> findByIdForUpdate(@Param("id") UUID id);
 
     List<Item> findByStatus(AuctionStatus status);
+
+    @Query("""
+            select i from Item i
+            where i.seller.email = :email
+            """)
+    List<Item> findBySellerEmail(String email);
 }
