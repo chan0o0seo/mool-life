@@ -1,5 +1,6 @@
 package com.example.backend.auth.user.model;
 
+import com.example.backend.store.model.Store;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -75,4 +78,7 @@ public class Users {
     @Schema(description = "계정 삭제(탈퇴) 시간 (soft delete)",
             example = "2025-06-30T15:20:30", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private LocalDateTime deletedAt;
+
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Store> stores = new ArrayList<>();
 }

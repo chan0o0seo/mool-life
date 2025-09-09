@@ -23,6 +23,8 @@ public enum ErrorCode {
     ITEM_CANNOT_UPDATE(HttpStatus.BAD_REQUEST, "ITEM_CANNOT_UPDATE_400", "수정은 경매 시작 전에만 가능합니다."),
     ITEM_NOT_LIVE(HttpStatus.BAD_REQUEST, "ITEM_NOT_LIVE_400", "경매가 아직 시작하지않았습니다."),
     BID_INCREMENT_TOO_LOW(HttpStatus.BAD_REQUEST, "BID_INCREMENT_TOO_LOW_400", "최소 입찰가보다 높은 금액을 제시해야 합니다."),
+
+    PRODUCT_NOT_FOUND(HttpStatus.BAD_REQUEST, "PRODUCT_NOT_FOUND_400", "상품을 찾을 수 없습니다."),
     ;
 
     private final HttpStatus httpStatus;
